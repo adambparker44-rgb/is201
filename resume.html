@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adam Parker | Résumé</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --navy:  #0a1628;
+      --gold:  #c9a84c;
+      --cream: #f5f3ef;
+      --ink:   #1a1a2e;
+      --muted: #6b7280;
+      --rule:  rgba(10,22,40,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); }
+
+    /* NAV */
+    .navbar {
+      background: rgba(10,22,40,0.97);
+      backdrop-filter: blur(12px);
+      position: fixed; top: 0; width: 100%; z-index: 1000;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+      padding: 0.9rem 0;
+    }
+    .navbar-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--gold) !important;
+    }
+    .nav-link {
+      color: rgba(255,255,255,0.75) !important;
+      font-size: 0.78rem; letter-spacing: 0.14em;
+      text-transform: uppercase; font-weight: 500;
+      padding: 0.5rem 1.1rem !important; transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--gold) !important; }
+    .navbar-toggler { border-color: rgba(201,168,76,0.4); }
+    .navbar-toggler-icon { filter: invert(1); }
+
+    /* RESUME WRAPPER */
+    .resume-wrap {
+      max-width: 860px; margin: 0 auto;
+      padding: 7rem 2rem 5rem;
+    }
+
+    /* HEADER */
+    .res-header { text-align: center; margin-bottom: 2.8rem; }
+    .res-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem; font-weight: 700;
+      color: var(--navy); letter-spacing: 0.04em;
+      line-height: 1.1;
+    }
+    .res-contact {
+      font-size: 0.82rem; color: var(--muted);
+      margin-top: 0.6rem; letter-spacing: 0.03em;
+    }
+    .res-contact a { color: var(--navy); text-decoration: none; transition: color 0.2s; }
+    .res-contact a:hover { color: var(--gold); }
+    .res-divider {
+      width: 60px; height: 2px; background: var(--gold);
+      margin: 1.2rem auto;
+    }
+
+    /* SECTION HEADS */
+    .res-section { margin-bottom: 2.6rem; }
+    .res-sec-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; font-weight: 600;
+      color: var(--navy); letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border-bottom: 1.5px solid var(--gold);
+      padding-bottom: 0.4rem; margin-bottom: 1.4rem;
+    }
+
+    /* ENTRIES */
+    .res-entry { margin-bottom: 1.5rem; }
+    .res-entry-head {
+      display: flex; justify-content: space-between;
+      align-items: baseline; flex-wrap: wrap; gap: 0.25rem;
+    }
+    .res-org {
+      font-weight: 600; font-size: 0.97rem;
+      color: var(--navy);
+    }
+    .res-date {
+      font-size: 0.78rem; color: var(--muted);
+      white-space: nowrap;
+    }
+    .res-role {
+      font-size: 0.85rem; color: var(--muted);
+      font-style: italic; margin: 0.15rem 0 0.5rem;
+    }
+    .res-bullets {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .res-bullets li {
+      font-size: 0.87rem; line-height: 1.65;
+      color: #3a3a4a; padding-left: 1.1rem;
+      position: relative; margin-bottom: 0.2rem;
+    }
+    .res-bullets li::before {
+      content: '·'; position: absolute; left: 0;
+      color: var(--gold); font-size: 1.1rem;
+      line-height: 1.5;
+    }
+
+    /* SKILLS / CHIPS */
+    .chip-row { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+    .chip {
+      padding: 0.3rem 0.85rem;
+      border: 1px solid rgba(10,22,40,0.18);
+      font-size: 0.78rem; color: var(--navy);
+    }
+
+    /* TWO-COL EDUCATION */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.2rem 1rem;
+      align-items: start;
+    }
+
+    /* TRANSACTION BLOCK */
+    .txn-block {
+      background: rgba(201,168,76,0.07);
+      border-left: 3px solid var(--gold);
+      padding: 0.75rem 1rem;
+      margin: 0.75rem 0 1rem;
+    }
+    .txn-title { font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
+    .txn-bullets {
+      list-style: none; padding: 0; margin: 0;
+    }
+    .txn-bullets li {
+      font-size: 0.84rem; line-height: 1.6;
+      color: #3a3a4a; padding-left: 1rem;
+      position: relative;
+    }
+    .txn-bullets li::before {
+      content: '·'; position: absolute; left: 0;
+      color: var(--gold);
+    }
+
+    /* PRINT BUTTON */
+    .print-btn {
+      display: inline-block;
+      background: var(--navy); color: var(--gold);
+      font-size: 0.75rem; letter-spacing: 0.18em;
+      text-transform: uppercase; padding: 0.65rem 1.6rem;
+      border: none; cursor: pointer; text-decoration: none;
+      transition: background 0.2s;
+    }
+    .print-btn:hover { background: #1b3a6b; color: var(--gold); }
+    @media print {
+      .navbar, .print-bar { display: none !important; }
+      .resume-wrap { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Adam Parker</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-1">
+          <li class="nav-item"><a class="nav-link" href="index.html#about">About</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.html#experience">Experience</a></li>
+          <li class="nav-item"><a class="nav-link active" href="resume.html">Résumé</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://www.linkedin.com/in/adambutchparker/" target="_blank">
+              <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PRINT BAR -->
+  <div class="print-bar" style="background:#fff; border-bottom:1px solid var(--rule); padding:0.75rem 1rem; text-align:right; margin-top:62px;">
+    <button class="print-btn" onclick="window.print()"><i class="fas fa-print me-1"></i> Print / Save PDF</button>
+  </div>
+
+  <div class="resume-wrap">
+
+    <!-- HEADER -->
+    <div class="res-header">
+      <h1 class="res-name">Adam Butch Parker</h1>
+      <div class="res-divider"></div>
+      <p class="res-contact">
+        Camas, WA &nbsp;&middot;&nbsp;
+        <a href="tel:+13609544832">(360) 954-4832</a> &nbsp;&middot;&nbsp;
+        <a href="mailto:adambparker44@gmail.com">adambparker44@gmail.com</a> &nbsp;&middot;&nbsp;
+        <a href="https://www.linkedin.com/in/adambutchparker/" target="_blank">linkedin.com/in/adambutchparker</a>
+      </p>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="res-section">
+      <h2 class="res-sec-title">Education</h2>
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Brigham Young University &mdash; Marriott School of Business</span>
+          <span class="res-date">Provo, UT &nbsp;&middot;&nbsp; Expected Apr 2028</span>
+        </div>
+        <p class="res-role">Bachelor of Science in Finance</p>
+        <ul class="res-bullets">
+          <li>GPA 3.92 / 4.00</li>
+          <li>ACT 32 / 36 &mdash; 97th Percentile</li>
+          <li>Brigham Young Scholarship (Academic Merit)</li>
+          <li>Member, BYU Finance Society and Investment Banking Association</li>
+          <li>Semi-Finalist, Bain &amp; Company Annual Consulting Case Competition</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="res-section">
+      <h2 class="res-sec-title">Experience</h2>
+
+      <!-- Lazard -->
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Lazard</span>
+          <span class="res-date">New York City, NY</span>
+        </div>
+        <p class="res-role">Incoming Investment Banking Summer Analyst &mdash; Jun 2027 &ndash; Jul 2027</p>
+      </div>
+
+      <!-- Solamere -->
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Solamere Capital (Private Equity Firm)</span>
+          <span class="res-date">New York City, NY</span>
+        </div>
+        <p class="res-role">Incoming Private Equity Summer Analyst &mdash; Jun 2026 &ndash; Jul 2026</p>
+      </div>
+
+      <!-- WJ Partners -->
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">WJ Partners (Long-hold Private Equity Firm)</span>
+          <span class="res-date">Spartanburg, SC</span>
+        </div>
+        <p class="res-role">Private Equity Analyst &mdash; Oct 2025 &ndash; Present</p>
+        <ul class="res-bullets">
+          <li>Analyzed trailing twelve-month product performance and built key insights for managers at an off-site event</li>
+          <li>Sourced and evaluated potential exit buyers, identifying strategic sale opportunities for portfolio companies</li>
+          <li>Reviewed FDDs to identify 100+ franchise investment opportunities, analyzing AUVs and average initial investments</li>
+        </ul>
+      </div>
+
+      <!-- Concordia Capital -->
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Concordia Capital (Lower Middle-Market Investment and Advisory Firm)</span>
+          <span class="res-date">New York City, NY</span>
+        </div>
+        <p class="res-role">Investment Banking Analyst &mdash; Sep 2025 &ndash; Dec 2025</p>
+        <ul class="res-bullets">
+          <li>Conducted outreach to company executives to initiate discussions for potential investment and acquisition opportunities</li>
+          <li>Built three-statement models with detailed revenue and expense builds for valuation analysis across multiple transactions</li>
+        </ul>
+
+        <div class="txn-block">
+          <p class="txn-title">Sell-Side M&amp;A (~$1M EBITDA Home-Service Construction SaaS Platform)</p>
+          <ul class="txn-bullets">
+            <li>Led a team drafting a section of an 80-page CIM covering company and industry metrics</li>
+            <li>Compiled table breakdowns of SaaS module pricing to clearly present product offerings to prospective buyers</li>
+          </ul>
+        </div>
+
+        <div class="txn-block">
+          <p class="txn-title">LP-Led Secondaries Transaction (~$20M FMV Preferred Stock)</p>
+          <ul class="txn-bullets">
+            <li>Developed a pre-NDA one-pager summarizing key financial metrics and operational details for prospective buyers</li>
+            <li>Collaborated with the team to redesign format, aligning deliverables with established industry standards</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Brandow -->
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Brandow Consulting (Inventory Management System Consulting Group)</span>
+          <span class="res-date">American Fork, UT</span>
+        </div>
+        <p class="res-role">Lead Marketing Assistant &mdash; Dec 2024 &ndash; Apr 2025</p>
+        <ul class="res-bullets">
+          <li>Edited tutorials, designed and ran YouTube campaigns, increasing subscribers 20% through strategic content planning</li>
+          <li>Increased new viewers by 50% by posting across new platforms, tracking performance, and using innovative video styles</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- LEADERSHIP & SERVICE -->
+    <div class="res-section">
+      <h2 class="res-sec-title">Leadership &amp; Service</h2>
+
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">Cascade Elementary School</span>
+          <span class="res-date">Orem, UT &nbsp;&middot;&nbsp; Feb 2025 &ndash; Apr 2025</span>
+        </div>
+        <p class="res-role">Volunteer Spanish Translator</p>
+        <ul class="res-bullets">
+          <li>Translated Spanish to English for seasonal parent-teacher conferences at a local elementary school</li>
+          <li>Coordinated with other translators to manage meeting assignments and ensure accuracy</li>
+        </ul>
+      </div>
+
+      <div class="res-entry">
+        <div class="res-entry-head">
+          <span class="res-org">The Church of Jesus Christ of Latter-day Saints</span>
+          <span class="res-date">McAllen, TX &nbsp;&middot;&nbsp; Dec 2022 &ndash; Dec 2024</span>
+        </div>
+        <p class="res-role">Full-time Volunteer Representative</p>
+        <ul class="res-bullets">
+          <li>Led training sessions for 100+ volunteers, teaching performance improvement techniques and fostering a productive culture</li>
+          <li>Coordinated logistics and organized large-scale community service events across the McAllen region</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SKILLS & INTERESTS -->
+    <div class="res-section">
+      <h2 class="res-sec-title">Awards, Skills &amp; Interests</h2>
+      <ul class="res-bullets">
+        <li>7.7 handicap in golf; competed in the 2022 Washington State Golf Tournament</li>
+        <li>Performed as Lord Farquaad in <em>Shrek: The Musical</em>; has memorized every lyric of Hamilton by Lin-Manuel Miranda</li>
+        <li>Self-taught pyrotechnics: manufactures and discharges custom fireworks displays</li>
+        <li>Fluent in Spanish with professional translation experience in school and community settings</li>
+      </ul>
+      <div class="mt-3">
+        <p style="font-size:0.78rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem;">Technical Skills</p>
+        <div class="chip-row">
+          <span class="chip">Excel / VBA</span>
+          <span class="chip">Financial Modeling</span>
+          <span class="chip">PowerPoint</span>
+          <span class="chip">Tableau</span>
+          <span class="chip">Bloomberg</span>
+          <span class="chip">PitchBook</span>
+          <span class="chip">Python</span>
+          <span class="chip">HTML / CSS / JS</span>
+          <span class="chip">Spanish (Fluent)</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /resume-wrap -->
+
+  <!-- FOOTER -->
+  <footer style="background:var(--navy); padding:2.5rem 0; text-align:center;">
+    <p style="font-family:'Cormorant Garamond',serif; font-size:1.4rem; color:var(--gold); margin-bottom:1rem;">Adam Parker</p>
+    <div style="margin-bottom:1rem;">
+      <a href="index.html" style="color:rgba(255,255,255,0.45); text-decoration:none; margin:0 0.9rem; font-size:0.82rem;">Home</a>
+      <a href="https://www.linkedin.com/in/adambutchparker/" target="_blank" style="color:rgba(255,255,255,0.45); text-decoration:none; margin:0 0.9rem; font-size:0.82rem;"><i class="fab fa-linkedin me-1"></i>LinkedIn</a>
+      <a href="mailto:adambparker44@gmail.com" style="color:rgba(255,255,255,0.45); text-decoration:none; margin:0 0.9rem; font-size:0.82rem;"><i class="fas fa-envelope me-1"></i>Email</a>
+    </div>
+    <p style="color:rgba(255,255,255,0.2); font-size:0.7rem;">BYU Marriott School of Business &nbsp;&middot;&nbsp; Finance &nbsp;&middot;&nbsp; Class of 2028</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

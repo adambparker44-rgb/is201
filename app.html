@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Fee Terminator | Wealth Manager Cost Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── RESET & FONTS ── */
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --bg:        #0c0c0f;
+      --bg2:       #13131a;
+      --bg3:       #1a1a25;
+      --border:    rgba(255,255,255,0.08);
+      --red:       #e63946;
+      --red-glow:  rgba(230,57,70,0.25);
+      --green:     #2ec77b;
+      --green-glow:rgba(46,199,123,0.2);
+      --gold:      #f4c430;
+      --text:      #e8e8f0;
+      --muted:     #888;
+      --label:     #aaa;
+    }
+
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── TOP NAV ── */
+    .app-nav {
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+    }
+    .app-nav .brand { color: var(--red); font-weight: 700; letter-spacing: 0.1em; }
+    .app-nav a {
+      color: var(--muted); text-decoration: none;
+      font-size: 0.68rem; letter-spacing: 0.12em;
+      transition: color 0.2s;
+    }
+    .app-nav a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    .app-hero {
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .app-hero .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 1rem;
+    }
+    .app-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+    .app-hero h1 span { color: var(--red); }
+    .app-hero p {
+      font-size: 1rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .app-main {
+      max-width: 1100px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    /* ── CONTROLS PANEL ── */
+    .controls-panel {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      position: sticky;
+      top: 1rem;
+    }
+
+    .panel-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+
+    .field { margin-bottom: 1.4rem; }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--label);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.04em;
+    }
+
+    label .val {
+      float: right;
+      font-family: 'Space Mono', monospace;
+      color: var(--text);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 4px;
+      background: var(--bg3);
+      outline: none;
+      border-radius: 2px;
+      cursor: pointer;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--text);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    input[type="range"]::-webkit-slider-thumb:hover { background: var(--gold); }
+
+    .panel-rule { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    .fee-row {
+      display: flex; gap: 0.8rem; margin-bottom: 1.4rem;
+    }
+    .fee-col { flex: 1; }
+    .fee-col label { font-size: 0.72rem; }
+
+    .calc-btn {
+      width: 100%;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      padding: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .calc-btn:hover { background: #c02030; }
+    .calc-btn:active { transform: scale(0.98); }
+
+    .disclaimer {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 0.8rem;
+      line-height: 1.5;
+    }
+
+    /* ── RESULTS PANEL ── */
+    .results-panel { min-height: 400px; }
+
+    .verdict-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .vcard {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.5rem;
+    }
+    .vcard-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .vcard-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .vcard-num.green { color: var(--green); }
+    .vcard-num.red   { color: var(--red); }
+    .vcard-num.gold  { color: var(--gold); }
+    .vcard-sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
+    /* VERDICT BANNER */
+    .verdict-banner {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .verdict-banner.show { display: block; }
+    .verdict-banner .vb-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 0.4rem;
+    }
+    .verdict-banner .vb-text {
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    .verdict-banner .vb-text strong { color: var(--red); }
+
+    /* CHART AREA */
+    .chart-wrap {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      position: relative;
+    }
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .chart-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .chart-legend {
+      display: flex; gap: 1.2rem;
+    }
+    .legend-item {
+      display: flex; align-items: center; gap: 0.4rem;
+      font-size: 0.72rem; color: var(--muted);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+    }
+    .legend-dot.green { background: var(--green); }
+    .legend-dot.red   { background: var(--red); }
+
+    canvas { display: block; }
+
+    /* EMPTY STATE */
+    .empty-state {
+      text-align: center;
+      padding: 5rem 2rem;
+      color: var(--muted);
+    }
+    .empty-state .icon {
+      font-size: 3rem; margin-bottom: 1rem; opacity: 0.4;
+    }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* FOOTER */
+    .app-footer {
+      text-align: center;
+      padding: 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      border-top: 1px solid var(--border);
+    }
+    .app-footer a { color: var(--red); text-decoration: none; }
+    .app-footer a:hover { color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (max-width: 800px) {
+      .app-main { grid-template-columns: 1fr; }
+      .controls-panel { position: static; }
+      .verdict-cards { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 500px) {
+      .verdict-cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="app-nav">
+    <span class="brand">THE FEE TERMINATOR</span>
+    <div>
+      <a href="scratch.html">&#8592; Back to Article</a>
+      &nbsp;&nbsp;&nbsp;
+      <a href="index.html">adamparker.me</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="app-hero">
+    <p class="tag">AI-Assisted Web App &nbsp;&middot;&nbsp; Adam Parker</p>
+    <h1>How much is your wealth manager<br><span>actually costing you?</span></h1>
+    <p>Adjust the inputs and see the real cost of a 1% AUM fee compound over your investment lifetime. The answer will make you uncomfortable.</p>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="app-main">
+
+    <!-- CONTROLS -->
+    <div class="controls-panel">
+      <p class="panel-title">Your Inputs</p>
+
+      <div class="field">
+        <label>Initial Investment <span class="val" id="lbl_initial">$100,000</span></label>
+        <input type="range" id="initial" min="5000" max="1000000" step="5000" value="100000"
+               oninput="updateLabel('initial','lbl_initial','$',0)" />
+      </div>
+
+      <div class="field">
+        <label>Monthly Contribution <span class="val" id="lbl_monthly">$500</span></label>
+        <input type="range" id="monthly" min="0" max="5000" step="50" value="500"
+               oninput="updateLabel('monthly','lbl_monthly','$',0)" />
+      </div>
+
+      <div class="field">
+        <label>Investment Horizon (years) <span class="val" id="lbl_years">30 yrs</span></label>
+        <input type="range" id="years" min="5" max="45" step="1" value="30"
+               oninput="document.getElementById('lbl_years').textContent = this.value + ' yrs'" />
+      </div>
+
+      <hr class="panel-rule" />
+
+      <div class="fee-row">
+        <div class="fee-col">
+          <div class="field">
+            <label>Expected Return <span class="val" id="lbl_return">7.0%</span></label>
+            <input type="range" id="ret" min="3" max="14" step="0.5" value="7"
+                   oninput="document.getElementById('lbl_return').textContent = parseFloat(this.value).toFixed(1)+'%'" />
+          </div>
+        </div>
+        <div class="fee-col">
+          <div class="field">
+            <label>Advisor Fee (AUM) <span class="val" id="lbl_fee">1.0%</span></label>
+            <input type="range" id="fee" min="0.1" max="3" step="0.1" value="1.0"
+                   oninput="document.getElementById('lbl_fee').textContent = parseFloat(this.value).toFixed(1)+'%'" />
+          </div>
+        </div>
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">&#9658; Calculate My Loss</button>
+      <p class="disclaimer">Assumes annual compounding. Index fund fee assumed at 0.05% (Vanguard VOO). For illustration only.</p>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results-panel">
+
+      <!-- Empty state (shown before first calc) -->
+      <div class="empty-state" id="emptyState">
+        <div class="icon">&#128200;</div>
+        <p>Set your numbers and hit <strong>Calculate</strong> to see what your wealth manager is really costing you.</p>
+      </div>
+
+      <!-- Results (hidden initially) -->
+      <div id="resultContent" style="display:none">
+
+        <div class="verdict-cards">
+          <div class="vcard">
+            <p class="vcard-label">Index Fund Portfolio</p>
+            <div class="vcard-num green" id="res_index">$0</div>
+            <p class="vcard-sub">At 0.05% fee (e.g., VOO)</p>
+          </div>
+          <div class="vcard">
+            <p class="vcard-label">Wealth Managed Portfolio</p>
+            <div class="vcard-num red" id="res_managed">$0</div>
+            <p class="vcard-sub" id="res_feepct">At 1.0% fee</p>
+          </div>
+          <div class="vcard">
+            <p class="vcard-label">Fees Cost You</p>
+            <div class="vcard-num gold" id="res_diff">$0</div>
+            <p class="vcard-sub" id="res_pct_lost">% of your final wealth</p>
+          </div>
+        </div>
+
+        <div class="verdict-banner show" id="verdictBanner">
+          <p class="vb-label">Verdict</p>
+          <p class="vb-text" id="verdictText"></p>
+        </div>
+
+        <div class="chart-wrap">
+          <div class="chart-header">
+            <span class="chart-title">Portfolio Growth Over Time</span>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-dot green"></div>
+                <span>Index Fund (0.05%)</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot red"></div>
+                <span id="legendFeeLabel">Wealth Managed (1.0%)</span>
+              </div>
+            </div>
+          </div>
+          <canvas id="feeChart" height="320"></canvas>
+        </div>
+
+      </div>
+    </div><!-- /results-panel -->
+  </div><!-- /app-main -->
+
+  <!-- FOOTER -->
+  <div class="app-footer">
+    <p>
+      Built by Adam Parker &nbsp;|&nbsp;
+      <a href="scratch.html">Read the article</a> &nbsp;|&nbsp;
+      <a href="index.html">adamparker.me</a>
+    </p>
+    <p style="margin-top:0.4rem; opacity:0.5;">
+      For educational purposes only. Not financial advice. Data assumes constant annual returns.
+    </p>
+  </div>
+
+  <script>
+    // ── FORMATTING HELPERS ──
+    function fmt(n) {
+      if (n >= 1_000_000) return '$' + (n / 1_000_000).toFixed(2) + 'M';
+      if (n >= 1_000) return '$' + Math.round(n).toLocaleString();
+      return '$' + Math.round(n);
+    }
+
+    function updateLabel(sliderId, labelId, prefix, decimals) {
+      const v = parseFloat(document.getElementById(sliderId).value);
+      const num = v >= 1000 ? v.toLocaleString() : v.toFixed(decimals);
+      document.getElementById(labelId).textContent = prefix + num;
+    }
+
+    // ── COMPOUND INTEREST (annual, with monthly contrib) ──
+    function futureValue(pv, monthlyContrib, annualRate, years) {
+      const r = annualRate / 100;
+      let balance = pv;
+      const annualContrib = monthlyContrib * 12;
+      for (let y = 0; y < years; y++) {
+        balance = balance * (1 + r) + annualContrib;
+      }
+      return balance;
+    }
+
+    // Build array of balances year by year
+    function buildYearlyData(pv, monthlyContrib, annualRate, years) {
+      const r = annualRate / 100;
+      const annualContrib = monthlyContrib * 12;
+      let balance = pv;
+      const data = [pv];
+      for (let y = 0; y < years; y++) {
+        balance = balance * (1 + r) + annualContrib;
+        data.push(balance);
+      }
+      return data;
+    }
+
+    let chartInstance = null;
+
+    // ── MAIN CALCULATE FUNCTION ──
+    function calculate() {
+      const pv      = parseFloat(document.getElementById('initial').value);
+      const monthly = parseFloat(document.getElementById('monthly').value);
+      const years   = parseInt(document.getElementById('years').value);
+      const ret     = parseFloat(document.getElementById('ret').value);
+      const fee     = parseFloat(document.getElementById('fee').value);
+
+      const indexFee    = 0.05;
+      const indexReturn = ret - indexFee;
+      const mgdReturn   = ret - fee;
+
+      const indexFV = futureValue(pv, monthly, indexReturn, years);
+      const mgdFV   = futureValue(pv, monthly, mgdReturn,   years);
+      const diff    = indexFV - mgdFV;
+      const pctLost = (diff / indexFV * 100).toFixed(1);
+
+      // Update cards
+      document.getElementById('res_index').textContent   = fmt(indexFV);
+      document.getElementById('res_managed').textContent = fmt(mgdFV);
+      document.getElementById('res_diff').textContent    = fmt(diff);
+      document.getElementById('res_feepct').textContent  = 'At ' + fee.toFixed(1) + '% fee';
+      document.getElementById('res_pct_lost').textContent = pctLost + '% of your final wealth';
+      document.getElementById('legendFeeLabel').textContent = 'Wealth Managed (' + fee.toFixed(1) + '%)';
+
+      // Verdict text
+      let verdict;
+      if (pctLost > 40) {
+        verdict = `Your wealth manager will consume <strong>${pctLost}%</strong> of your final portfolio &mdash; that's <strong>${fmt(diff)}</strong> that goes to them instead of you. Over ${years} years, a ${fee.toFixed(1)}% annual fee doesn't just take ${fee.toFixed(1)}% &mdash; it takes nearly half your retirement. Put that money in a Vanguard index fund instead.`;
+      } else if (pctLost > 25) {
+        verdict = `A ${fee.toFixed(1)}% AUM fee will cost you <strong>${fmt(diff)}</strong> over ${years} years &mdash; roughly <strong>${pctLost}%</strong> of what you would have had. A Vanguard S&P 500 index fund (VOO) charges 0.03% and has outperformed most active managers over any 15-year period. The math isn't subtle.`;
+      } else {
+        verdict = `Even a "modest" ${fee.toFixed(1)}% fee adds up to <strong>${fmt(diff)}</strong> over ${years} years. That's money compounding for your advisor, not for you. A simple index fund portfolio at 0.05% would leave you with <strong>${fmt(diff)}</strong> more by the end.`;
+      }
+      document.getElementById('verdictText').innerHTML = verdict;
+
+      // Show results
+      document.getElementById('emptyState').style.display    = 'none';
+      document.getElementById('resultContent').style.display = 'block';
+
+      // Build chart data
+      const indexData = buildYearlyData(pv, monthly, indexReturn, years);
+      const mgdData   = buildYearlyData(pv, monthly, mgdReturn,   years);
+      const labels    = Array.from({length: years + 1}, (_, i) => 'Yr ' + i);
+
+      // Chart
+      if (chartInstance) chartInstance.destroy();
+
+      const ctx = document.getElementById('feeChart').getContext('2d');
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Index Fund',
+              data: indexData,
+              borderColor: '#2ec77b',
+              backgroundColor: 'rgba(46,199,123,0.08)',
+              borderWidth: 2.5,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.3,
+            },
+            {
+              label: 'Wealth Managed (' + fee.toFixed(1) + '%)',
+              data: mgdData,
+              borderColor: '#e63946',
+              backgroundColor: 'rgba(230,57,70,0.06)',
+              borderWidth: 2.5,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.3,
+              borderDash: [6, 3],
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              backgroundColor: '#1a1a25',
+              titleColor: '#aaa',
+              bodyColor: '#e8e8f0',
+              borderColor: 'rgba(255,255,255,0.1)',
+              borderWidth: 1,
+              callbacks: {
+                label: function(ctx) {
+                  return ' ' + ctx.dataset.label + ': ' + fmt(ctx.parsed.y);
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#666', font: { family: 'Space Mono', size: 10 }, maxTicksLimit: 10 }
+            },
+            y: {
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: {
+                color: '#666',
+                font: { family: 'Space Mono', size: 10 },
+                callback: function(v) { return fmt(v); }
+              }
+            }
+          },
+          interaction: { mode: 'nearest', axis: 'x', intersect: false }
+        }
+      });
+    }
+
+    // Run on load with defaults so chart is ready
+    window.addEventListener('DOMContentLoaded', function() {
+      // update labels for initial slider values
+      updateLabel('initial', 'lbl_initial', '$', 0);
+      updateLabel('monthly', 'lbl_monthly', '$', 0);
+    });
+  </script>
+</body>
+</html>
