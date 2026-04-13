@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fee Calculator &mdash; Adam Parker</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* All styles, HTML, and script in one file (per assignment) */
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #f4f4f4;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top nav */
+    .top-nav {
+      background-color: #1a2b4a;
+      color: white;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .top-nav strong { color: #c9a84c; }
+
+    .top-nav a {
+      color: #c9a84c;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .top-nav a:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
+    /* Page header */
+    .page-header {
+      background-color: #1a2b4a;
+      color: white;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .page-header h1 {
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 span { color: #cc001f; }
+
+    .page-header p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.95rem;
+      max-width: 550px;
+      margin: 0 auto;
+    }
+
+    /* Main layout */
+    .app-wrap {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 0 20px;
+      display: flex;
+      gap: 25px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    /* Controls */
+    .controls {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 25px;
+      width: 300px;
+      flex-shrink: 0;
+    }
+
+    .controls h3 {
+      font-size: 1rem;
+      margin-bottom: 20px;
+      color: #1a2b4a;
+      border-bottom: 2px solid #c9a84c;
+      padding-bottom: 8px;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    .field label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 6px;
+    }
+
+    .field label .val {
+      font-weight: bold;
+      color: #1a2b4a;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+      accent-color: #1a2b4a;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #eee;
+      margin: 15px 0;
+    }
+
+    .calc-btn {
+      width: 100%;
+      background-color: #cc001f;
+      color: white;
+      border: none;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .calc-btn:hover { background-color: #a0001a; }
+
+    .note {
+      font-size: 0.73rem;
+      color: #888;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Results */
+    .results {
+      flex: 1;
+      min-width: 280px;
+    }
+
+    /* Result cards */
+    .result-cards {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .rcard {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 16px 18px;
+      flex: 1;
+      min-width: 130px;
+      text-align: center;
+    }
+
+    .rcard .rc-label {
+      font-size: 0.7rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .rcard .rc-num {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .rcard .rc-sub {
+      font-size: 0.72rem;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .green { color: #1a7a3c; }
+    .red   { color: #cc001f; }
+    .gold  { color: #b8860b; }
+
+    /* Verdict */
+    .verdict-box {
+      background: white;
+      border-left: 4px solid #cc001f;
+      border: 1px solid #ddd;
+      border-left: 4px solid #cc001f;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      display: none;
+    }
+
+    .verdict-box.show { display: block; }
+    .verdict-box strong { color: #cc001f; }
+
+    /* Chart */
+    .chart-box {
+      background: white;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .chart-box .chart-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chart-box h4 {
+      font-size: 0.9rem;
+      color: #1a2b4a;
+      margin: 0;
+    }
+
+    .legend {
+      display: flex;
+      gap: 16px;
+      font-size: 0.78rem;
+      color: #555;
+    }
+
+    .leg-dot {
+      display: inline-block;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+
+    /* Empty state */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: #aaa;
+      background: white;
+      border: 1px solid #ddd;
+    }
+
+    .empty p { font-size: 0.9rem; margin-top: 10px; }
+
+    /* Footer */
+    .app-footer {
+      background-color: #1a2b4a;
+      color: rgba(255,255,255,0.55);
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+      font-size: 0.8rem;
+    }
+
+    .app-footer a {
+      color: #c9a84c;
+      text-decoration: none;
+      margin: 0 8px;
+    }
+
+    @media (max-width: 650px) {
+      .controls { width: 100%; }
+      .result-cards { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <div class="top-nav">
+    <strong>Fee Calculator</strong>
+    <div>
+      <a href="scratch.html">&#8592; Back to Article</a>
+      <a href="index.html">Home</a>
+      <a href="resume.html">Resume</a>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>How Much Is Your Wealth Manager <span>Actually Costing You?</span></h1>
+    <p>Adjust the sliders and see what a 1% annual fee really does to your retirement over time.</p>
+  </div>
+
+  <!-- APP -->
+  <div class="app-wrap">
+
+    <!-- INPUTS -->
+    <div class="controls">
+      <h3>Your Numbers</h3>
+
+      <div class="field">
+        <label>Initial Investment <span class="val" id="lbl_pv">$100,000</span></label>
+        <input type="range" id="pv" min="5000" max="1000000" step="5000" value="100000"
+               oninput="updateLabel('pv','lbl_pv','$')" />
+      </div>
+
+      <div class="field">
+        <label>Monthly Contribution <span class="val" id="lbl_mo">$500</span></label>
+        <input type="range" id="mo" min="0" max="5000" step="50" value="500"
+               oninput="updateLabel('mo','lbl_mo','$')" />
+      </div>
+
+      <div class="field">
+        <label>Years <span class="val" id="lbl_yr">30</span></label>
+        <input type="range" id="yr" min="5" max="45" step="1" value="30"
+               oninput="document.getElementById('lbl_yr').textContent = this.value" />
+      </div>
+
+      <hr class="divider" />
+
+      <div class="field">
+        <label>Expected Annual Return <span class="val" id="lbl_ret">7.0%</span></label>
+        <input type="range" id="ret" min="3" max="14" step="0.5" value="7"
+               oninput="document.getElementById('lbl_ret').textContent = parseFloat(this.value).toFixed(1)+'%'" />
+      </div>
+
+      <div class="field">
+        <label>Advisor Fee (AUM %) <span class="val" id="lbl_fee">1.0%</span></label>
+        <input type="range" id="fee" min="0.1" max="3" step="0.1" value="1.0"
+               oninput="document.getElementById('lbl_fee').textContent = parseFloat(this.value).toFixed(1)+'%'" />
+      </div>
+
+      <button class="calc-btn" onclick="calculate()">Calculate My Loss</button>
+      <p class="note">Index fund assumed at 0.05% (e.g. Vanguard VOO). For illustration only.</p>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results">
+
+      <div id="emptyState" class="empty">
+        <p>&#128200;</p>
+        <p>Set your numbers above and click <strong>Calculate</strong> to see what your advisor is costing you.</p>
+      </div>
+
+      <div id="resultArea" style="display:none;">
+
+        <div class="result-cards">
+          <div class="rcard">
+            <div class="rc-label">Index Fund</div>
+            <div class="rc-num green" id="res_idx">-</div>
+            <div class="rc-sub">At 0.05% fee</div>
+          </div>
+          <div class="rcard">
+            <div class="rc-label">Wealth Managed</div>
+            <div class="rc-num red" id="res_mgd">-</div>
+            <div class="rc-sub" id="res_fee_sub">At 1.0% fee</div>
+          </div>
+          <div class="rcard">
+            <div class="rc-label">Fee Cost</div>
+            <div class="rc-num gold" id="res_diff">-</div>
+            <div class="rc-sub" id="res_pct">% of your wealth</div>
+          </div>
+        </div>
+
+        <div class="verdict-box show" id="verdict">
+          <!-- filled by JS -->
+        </div>
+
+        <div class="chart-box">
+          <div class="chart-top">
+            <h4>Portfolio Growth Over Time</h4>
+            <div class="legend">
+              <span><span class="leg-dot" style="background:#1a7a3c;"></span>Index Fund (0.05%)</span>
+              <span><span class="leg-dot" style="background:#cc001f;"></span><span id="mgdLabel">Wealth Managed (1.0%)</span></span>
+            </div>
+          </div>
+          <canvas id="chart"></canvas>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /app-wrap -->
+
+  <!-- FOOTER -->
+  <div class="app-footer">
+    <a href="scratch.html">&#8592; Back to Article</a>
+    <a href="index.html">Home</a>
+    <a href="resume.html">Resume</a>
+    <span style="margin-left:15px;">Built by Adam Parker &middot; BYU Finance 2025</span>
+  </div>
+
+  <script>
+    function fmt(n) {
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
+      return '$' + Math.round(n).toLocaleString();
+    }
+
+    function updateLabel(id, lblId, prefix) {
+      const v = parseFloat(document.getElementById(id).value);
+      const s = v >= 1000 ? v.toLocaleString() : v;
+      document.getElementById(lblId).textContent = prefix + s;
+    }
+
+    function calcFV(pv, monthly, rate, years) {
+      const r = rate / 100;
+      const annualContrib = monthly * 12;
+      let bal = pv;
+      for (let y = 0; y < years; y++) {
+        bal = bal * (1 + r) + annualContrib;
+      }
+      return bal;
+    }
+
+    function buildSeries(pv, monthly, rate, years) {
+      const r = rate / 100;
+      const annualContrib = monthly * 12;
+      let bal = pv;
+      const arr = [pv];
+      for (let y = 0; y < years; y++) {
+        bal = bal * (1 + r) + annualContrib;
+        arr.push(bal);
+      }
+      return arr;
+    }
+
+    let chartInst = null;
+
+    function calculate() {
+      const pv      = parseFloat(document.getElementById('pv').value);
+      const monthly = parseFloat(document.getElementById('mo').value);
+      const years   = parseInt(document.getElementById('yr').value);
+      const ret     = parseFloat(document.getElementById('ret').value);
+      const fee     = parseFloat(document.getElementById('fee').value);
+
+      const idxFV = calcFV(pv, monthly, ret - 0.05, years);
+      const mgdFV = calcFV(pv, monthly, ret - fee,  years);
+      const diff  = idxFV - mgdFV;
+      const pct   = (diff / idxFV * 100).toFixed(1);
+
+      document.getElementById('res_idx').textContent  = fmt(idxFV);
+      document.getElementById('res_mgd').textContent  = fmt(mgdFV);
+      document.getElementById('res_diff').textContent = fmt(diff);
+      document.getElementById('res_fee_sub').textContent = 'At ' + fee.toFixed(1) + '% fee';
+      document.getElementById('res_pct').textContent = pct + '% of your wealth';
+      document.getElementById('mgdLabel').textContent = 'Wealth Managed (' + fee.toFixed(1) + '%)';
+
+      const verdictEl = document.getElementById('verdict');
+      verdictEl.innerHTML = `Your wealth manager will cost you <strong>${fmt(diff)}</strong> over ${years} years — that's <strong>${pct}%</strong> of your final portfolio. A Vanguard index fund (VOO) charges 0.03% and has outperformed the overwhelming majority of active managers over any 15-year period. The math is not subtle.`;
+
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('resultArea').style.display = 'block';
+
+      const labels = Array.from({length: years + 1}, (_, i) => 'Yr ' + i);
+      const idxSeries = buildSeries(pv, monthly, ret - 0.05, years);
+      const mgdSeries = buildSeries(pv, monthly, ret - fee,  years);
+
+      if (chartInst) chartInst.destroy();
+      const ctx = document.getElementById('chart').getContext('2d');
+      chartInst = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels,
+          datasets: [
+            {
+              label: 'Index Fund (0.05%)',
+              data: idxSeries,
+              borderColor: '#1a7a3c',
+              backgroundColor: 'rgba(26,122,60,0.1)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.3
+            },
+            {
+              label: 'Wealth Managed (' + fee.toFixed(1) + '%)',
+              data: mgdSeries,
+              borderColor: '#cc001f',
+              backgroundColor: 'rgba(204,0,31,0.06)',
+              borderWidth: 2,
+              pointRadius: 0,
+              fill: true,
+              tension: 0.3,
+              borderDash: [6, 3]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              mode: 'index',
+              intersect: false,
+              callbacks: {
+                label: c => ' ' + c.dataset.label + ': ' + fmt(c.parsed.y)
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { maxTicksLimit: 10, font: { size: 11 } },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            y: {
+              ticks: {
+                font: { size: 11 },
+                callback: v => fmt(v)
+              },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            }
+          }
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>
