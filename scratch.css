@@ -1,0 +1,310 @@
+/* scratch.css — Custom styles for the opinion page */
+/* No Bootstrap used on this page */
+
+/* ── BODY ── */
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    background-color: #f9f6f1;
+    color: #222;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+    line-height: 1.75;
+}
+
+/* ── TOP NAV DIV ── */
+div.top-nav {
+    background-color: #1a2b4a;
+    color: white;
+    padding: 13px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+div.top-nav a {
+    color: #c9a84c;
+    text-decoration: none;
+    margin-left: 18px;
+}
+
+div.top-nav a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+/* ── PAGE HEADER DIV ── */
+div.page-header {
+    background: linear-gradient(160deg, #1a2b4a 0%, #22396b 100%);
+    color: white;
+    padding: 60px 20px 50px;
+    text-align: center;
+    position: relative;
+}
+
+/* Decorative circle shape behind header text */
+div.page-header::before {
+    content: '';
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background-color: rgba(201, 168, 76, 0.07);
+}
+
+div.page-header h1 {
+    font-family: Georgia, serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+div.page-header p {
+    color: #c9a84c;
+    font-size: 1.05rem;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+div.page-header .byline {
+    color: rgba(255, 255, 255, 0.45);
+    font-size: 0.82rem;
+    font-family: Arial, sans-serif;
+    margin-top: 10px;
+    position: relative;
+}
+
+/* Gold divider bar */
+div.gold-strip {
+    height: 4px;
+    background: linear-gradient(90deg, #1a2b4a 0%, #c9a84c 50%, #1a2b4a 100%);
+}
+
+/* ── MAIN CONTENT DIV ── */
+div.main-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 25px 60px;
+}
+
+/* ── HEADINGS ── */
+h2 {
+    color: #1a2b4a;
+    font-size: 1.55rem;
+    font-weight: bold;
+    border-left: 5px solid #c9a84c;
+    padding-left: 12px;
+    margin-top: 40px;
+    margin-bottom: 14px;
+}
+
+h3 {
+    color: #1a2b4a;
+    font-size: 1.1rem;
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+p { margin-bottom: 14px; color: #444; }
+
+a { color: #8a0015; }
+a:hover { color: #1a2b4a; }
+
+/* ── TABLE OF CONTENTS DIV ── */
+div.toc-box {
+    background-color: #f0ece3;
+    border-left: 5px solid #1a2b4a;
+    border-radius: 0 4px 4px 0;
+    padding: 16px 22px;
+    margin-bottom: 30px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+}
+
+div.toc-box p {
+    font-weight: bold;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #1a2b4a;
+    margin-bottom: 8px;
+}
+
+div.toc-box a {
+    color: #8a0015;
+    text-decoration: none;
+}
+
+div.toc-box a:hover { text-decoration: underline; }
+
+/* ── DATA HIGHLIGHT BOX ── */
+div.data-box {
+    background-color: #1a2b4a;
+    color: white;
+    padding: 22px 28px;
+    margin: 22px 0;
+    border-left: 6px solid #c9a84c;
+}
+
+div.data-box .label {
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #c9a84c;
+    margin-bottom: 6px;
+}
+
+div.data-box .big-number {
+    font-size: 3.2rem;
+    font-weight: bold;
+    color: #e63946;
+    line-height: 1;
+}
+
+div.data-box .description {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.88rem;
+    margin-top: 8px;
+}
+
+/* ── BLOCKQUOTE ── */
+blockquote {
+    font-style: italic;
+    font-size: 1.2rem;
+    color: #8a0015;
+    border-left: 4px solid #8a0015;
+    padding: 10px 20px;
+    margin: 22px 0;
+    background-color: rgba(138, 0, 21, 0.04);
+    border-radius: 0 4px 4px 0;
+}
+
+/* ── LISTS ── */
+ol.steps {
+    margin-left: 22px;
+    margin-bottom: 15px;
+}
+
+ol.steps li {
+    margin-bottom: 14px;
+    color: #333;
+    line-height: 1.7;
+}
+
+ul.sub-items {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-top: 6px;
+    color: #666;
+    font-size: 0.88rem;
+}
+
+ul.sub-items li { margin-bottom: 3px; }
+
+/* ── IMAGE ── */
+.article-image {
+    width: 100%;
+    max-height: 340px;
+    object-fit: cover;
+    display: block;
+    margin: 18px 0 6px;
+    border-left: 5px solid #c9a84c;
+}
+
+.image-caption {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    color: #999;
+    font-style: italic;
+    margin-bottom: 18px;
+}
+
+/* ── VIDEO ── */
+div.video-section {
+    margin: 22px 0;
+}
+
+div.video-section p {
+    font-family: Arial, sans-serif;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #8a0015;
+    margin-bottom: 8px;
+}
+
+/* ── CTA BLOCK ── */
+div.cta-block {
+    background-color: #8a0015;
+    color: white;
+    padding: 28px;
+    text-align: center;
+    margin: 35px 0;
+    border-radius: 4px;
+}
+
+div.cta-block h3 {
+    color: white;
+    font-size: 1.35rem;
+    margin-bottom: 8px;
+}
+
+div.cta-block p {
+    color: rgba(255, 255, 255, 0.82);
+    margin-bottom: 16px;
+}
+
+div.cta-block a {
+    background-color: white;
+    color: #8a0015;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 24px;
+    display: inline-block;
+    font-size: 0.85rem;
+    border-radius: 3px;
+}
+
+div.cta-block a:hover {
+    background-color: #1a2b4a;
+    color: white;
+}
+
+/* ── FOOTER DIV ── */
+div.page-footer {
+    background-color: #1a2b4a;
+    color: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    padding: 25px;
+    font-family: Arial, sans-serif;
+    font-size: 0.8rem;
+}
+
+div.page-footer a {
+    color: #c9a84c;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+div.page-footer a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 28px 0;
+}
